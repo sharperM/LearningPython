@@ -5,7 +5,7 @@ import sys
 reload(sys)
 sys.setdefaultencoding("utf-8")
 
-form Pillow import Image
+form PIL import Image
 im = Image.open("test.jpg")
 print im.format, im.size, im.mode
 im.thumbnail((100,100))
