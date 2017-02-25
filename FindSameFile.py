@@ -4,7 +4,8 @@ import os.path
 #print os.name
 #print os.getenv('PATH')
 import sys
-type = sys.getfilesystemencoding()
+reload(sys)
+sys.setdefaultencoding( "utf-8" )
 
 #try:
 #    f = open('F:\\msp_project\\msp.txt', 'r')
@@ -33,11 +34,11 @@ def listSameSizeFilePath(root):
 			allfileSize_Path[nSize].append(os.path.join(parent,filename))	
 			pass
 	return allfileSize_Path
-#æŸ¥æ‰¾æ–‡ä»¶åç›¸ä¼¼çš„æ–‡ä»¶
+#²éÕÒÎÄ¼þÃûÏàËÆµÄÎÄ¼þ
 def listSameNameFilePath(root):
 	allFileName_path = {}
 	allSimilarityName = []
-	#æ‰¾æ‰€æœ‰ç›¸åŒåå­—çš„æ–‡ä»¶å
+	#ÕÒËùÓÐÏàÍ¬Ãû×ÖµÄÎÄ¼þÃû
 	for parent,dirnames,filenames in os.walk(root):    
 		for dirname in  dirnames:                     
 			pass
@@ -46,7 +47,7 @@ def listSameNameFilePath(root):
 			if allFileName_path.get(name) == None:
 				allFileName_path[name]=[]
 			allFileName_path[name].append(os.path.join(parent,filename))
-	#æ‰¾å‡ºä¸€ä¸ªæ–‡ä»¶åæ˜¯ å¦ä¸€ä¸ªæ–‡ä»¶åå­—çš„ å­é›†ï¼Œä¸”æ˜¯ä»Žç¬¬ä¸€ä¸ªå­—ç¬¦å°±åŒ¹é…
+	#ÕÒ³öÒ»¸öÎÄ¼þÃûÊÇ ÁíÒ»¸öÎÄ¼þÃû×ÖµÄ ×Ó¼¯£¬ÇÒÊÇ´ÓµÚÒ»¸ö×Ö·û¾ÍÆ¥Åä
 	for fname1,path1 in allFileName_path.iteritems():
 		similarityName = []
 		similarityName.append(fname1)
@@ -68,8 +69,8 @@ def md5_for_file(f, block_size=2**20):
         md5.update(data)
     return md5.hexdigest()
 #E:\\KuGou
-#F:\\ä¸‹è½½\\
-rootdir = 'E:\\KuGou'
+#F:\\ÏÂÔØ\\
+rootdir = u'E:\\music\\'
 samesize = listSameSizeFilePath(rootdir)
 
 
@@ -88,7 +89,7 @@ for paths in samesize.itervalues():
 			    if md5_filePath.get(strMd5) == None:
 			    	md5_filePath[strMd5] = []
 			    md5_filePath[strMd5].append(filePath)
-			    
+			    print filePath.decode('utf-8')
 			finally:
 			    if f:
 			        f.close()
@@ -131,7 +132,7 @@ print "write Time count:"+str(nWriteTime)
 try:
 	fw = open(os.path.join(rootdir,"log1.txt"), 'w')
 	print "--------------------"
-	fw.write("------ç›¸åŒçš„------\r\n")
+	fw.write("------ÏàÍ¬µÄ------\r\n")
 	for k,v in sameNameFiles.iteritems():
 		if len(v)>1:
 			fw.write(k)
@@ -140,7 +141,7 @@ try:
 				fw.write(ppath)
 				fw.write('\r\n')
 	print "--------------------"
-	fw.write("------ç›¸ä¼¼çš„------\r\n")
+	fw.write("------ÏàËÆµÄ------\r\n")
 	for names in similarityNameFiles:
 		for name in names:
 			if len(names)>1:
@@ -149,4 +150,3 @@ try:
 finally:
 	if fw:
 		fw.close()
-
