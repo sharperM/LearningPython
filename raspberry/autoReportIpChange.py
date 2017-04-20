@@ -20,7 +20,7 @@ def prompt(prompt):
 
 def readSenderData():
     # print ((sys.path[0].decode('gbk')+'mailconfig.json11111').encode("utf-8"))
-    with open((sys.path[0]+'mailconfig.json')) as data_file:    
+    with open((sys.path[0]+'/mailconfig.json')) as data_file:    
         data = json.load(data_file)
     # pprint(data)
     return data
