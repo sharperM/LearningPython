@@ -33,7 +33,8 @@ def sendMailToQQ(msg):
     except smtplib.SMTPException:
         print "Error: cannot send mail"
 
-
+oldIp = get('https://api.ipify.org').text
+print('My public IP address is: {}'.format(oldIp))
 
 class MyThread(Thread):
     def __init__(self, event):
@@ -47,13 +48,17 @@ class MyThread(Thread):
             # call a function
     def job(self):
         ip = get('https://api.ipify.org').text
+        if self.oldIp != ip :
+            sendMailToQQ(ip)
+            self.oldIp = ip
         print(ip)
+
 stopFlag = Event()
 thread = MyThread(stopFlag)
+thread.oldIp = oldIp
 thread.start()
 
-oldIp = get('https://api.ipify.org').text
-print('My public IP address is: {}'.format(oldIp))
+
 sendMailToQQ(oldIp)
 # this will stop the timer
 #stopFlag.set()
