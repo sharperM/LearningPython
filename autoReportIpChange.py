@@ -16,6 +16,17 @@ from getpass import getpass
 def prompt(prompt):
     return input(prompt).strip()
 
+
+def getIp():
+    try:
+        ip = requests.get('https://api.ipify.org').text
+        # r = requests.get(url, params={'s': thing})
+        print(ip)
+        return ip
+    except requests.exceptions.RequestException as e:  # This is the correct syntax
+        print e
+        return e
+
 def sendMailToQQ(msg):
     sender = '659900896@qq.com'
     receivers = ['659900896@qq.com']  # 接收邮件，可设置为你的QQ邮箱或者其他邮箱
@@ -34,7 +45,7 @@ def sendMailToQQ(msg):
     except smtplib.SMTPException:
         print "Error: cannot send mail"
 
-oldIp = requests.get('https://api.ipify.org').text
+oldIp = getIp()
 print('My public IP address is: {}'.format(oldIp))
 
 class MyThread(Thread):
@@ -48,16 +59,14 @@ class MyThread(Thread):
             self.job()
             # call a function
     def job(self):
-        try:
-            ip = requests.get('https://api.ipify.org').text
-            # r = requests.get(url, params={'s': thing})
-            if self.oldIp != ip :
-                sendMailToQQ(ip)
-                self.oldIp = ip
-            print(ip)
-        except requests.exceptions.RequestException as e:  # This is the correct syntax
-            print e
+        ip = getIp()
+        # r = requests.get(url, params={'s': thing})
+        if self.oldIp != ip :
+            sendMailToQQ(ip)
+            self.oldIp = ip
+
             
+
 
 stopFlag = Event()
 thread = MyThread(stopFlag)
