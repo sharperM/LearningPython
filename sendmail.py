@@ -15,7 +15,7 @@ def prompt(prompt):
     return input(prompt).strip()
    
 sender = '659900896@qq.com'
-receivers = ['659900895@qq.com']  # 接收邮件，可设置为你的QQ邮箱或者其他邮箱
+receivers = ['659900896@qq.com']  # 接收邮件，可设置为你的QQ邮箱或者其他邮箱
 
 message = MIMEText('Python 邮件发送测试...', 'plain', 'utf-8')
 message['From'] = Header("菜鸟教程", 'utf-8')
