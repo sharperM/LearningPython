@@ -29,11 +29,11 @@ def getIp():
     try:
         ip = requests.get('https://api.ipify.org').text
         # r = requests.get(url, params={'s': thing})
-        print(ip)
+        # pprint(ip)
         return ip
     except requests.exceptions.RequestException as e:  # This is the correct syntax
         print e
-        return e
+        return 'getIpFail'
 
 def sendMailToQQ(msg):
     # 第三方 SMTP 服务
@@ -68,13 +68,14 @@ class MyThread(Thread):
 
     def run(self):
         while not self.stopped.wait(10):
-            print("my thread")
+            # print("my thread")
             self.job()
             # call a function
     def job(self):
         ip = getIp()
         # r = requests.get(url, params={'s': thing})
         if self.oldIp != ip :
+            print ('ipchange',oldIp,ip)
             sendMailToQQ(ip)
             self.oldIp = ip
 
