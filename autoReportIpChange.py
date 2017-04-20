@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 # coding=utf-8
 from threading import Timer,Thread,Event
-from requests import get
+# from requests import get
+import requests
 import smtplib
 from email.mime.text import MIMEText
 from email.header import Header
@@ -33,7 +34,7 @@ def sendMailToQQ(msg):
     except smtplib.SMTPException:
         print "Error: cannot send mail"
 
-oldIp = get('https://api.ipify.org').text
+oldIp = requests.get('https://api.ipify.org').text
 print('My public IP address is: {}'.format(oldIp))
 
 class MyThread(Thread):
@@ -47,11 +48,16 @@ class MyThread(Thread):
             self.job()
             # call a function
     def job(self):
-        ip = get('https://api.ipify.org').text
-        if self.oldIp != ip :
-            sendMailToQQ(ip)
-            self.oldIp = ip
-        print(ip)
+        try:
+            ip = requests.get('https://api.ipify.org').text
+            # r = requests.get(url, params={'s': thing})
+            if self.oldIp != ip :
+                sendMailToQQ(ip)
+                self.oldIp = ip
+            print(ip)
+        except requests.exceptions.RequestException as e:  # This is the correct syntax
+            print e
+            
 
 stopFlag = Event()
 thread = MyThread(stopFlag)
