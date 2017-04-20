@@ -4,8 +4,8 @@ import os.path
 #print os.name
 #print os.getenv('PATH')
 import sys
-type = sys.getfilesystemencoding()
-
+reload(sys)
+sys.setdefaultencoding("utf-8")
 #try:
 #    f = open('F:\\msp_project\\msp.txt', 'r')
 #    print f.read()
@@ -69,7 +69,7 @@ def md5_for_file(f, block_size=2**20):
     return md5.hexdigest()
 #E:\\KuGou
 #F:\\下载\\
-rootdir = 'E:\\KuGou'
+rootdir = 'D:\\TDDownload'
 samesize = listSameSizeFilePath(rootdir)
 
 
