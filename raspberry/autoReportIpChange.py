@@ -10,13 +10,17 @@ from email.header import Header
 
 from getpass import getpass
 import json
+import sys
 from pprint import pprint
+reload(sys)
+sys.setdefaultencoding( "utf-8" )
 
 def prompt(prompt):
     return input(prompt).strip()
 
 def readSenderData():
-    with open('mailconfig.json') as data_file:    
+    # print ((sys.path[0].decode('gbk')+'mailconfig.json11111').encode("utf-8"))
+    with open((sys.path[0]+'mailconfig.json')) as data_file:    
         data = json.load(data_file)
     # pprint(data)
     return data
@@ -34,7 +38,7 @@ def getIp():
 def sendMailToQQ(msg):
     # 第三方 SMTP 服务
     mailinfo = readSenderData()
-    mail_host="smtp.qq.com"  #设置服务器
+    mail_host=mailinfo["smtp"]  #设置服务器
     mail_user=mailinfo["sendaccount"]    #用户名
     mail_pass=mailinfo["pw"]   #口令 
     sender = mailinfo["sendaccount"]
