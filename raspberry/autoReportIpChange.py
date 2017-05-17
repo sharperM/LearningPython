@@ -6,14 +6,16 @@ import requests
 import smtplib
 from email.mime.text import MIMEText
 from email.header import Header
-
+import time
 
 from getpass import getpass
 import json
 import sys
+import os
 from pprint import pprint
 reload(sys)
 sys.setdefaultencoding( "utf-8" )
+
 
 def prompt(prompt):
     return input(prompt).strip()
@@ -32,36 +34,45 @@ def getIp():
         # pprint(ip)
         return ip
     except requests.exceptions.RequestException as e:  # This is the correct syntax
-        print e
+        # print e
         return 'getIpFail'
+
+def writeFile(text, filename):
+    fw = open(os.path.join('/home/pi/LearningPython/raspberry/',filename),'w')
+    fw.write(text)
+    fw.close()
+
 
 def sendMailToQQ(msg):
     # 第三方 SMTP 服务
     mailinfo = readSenderData()
-    mail_host=mailinfo["smtp"]  #设置服务器
-    mail_user=mailinfo["sendaccount"]    #用户名
-    mail_pass=mailinfo["pw"]   #口令 
+    mail_host = mailinfo["smtp"]  #设置服务器
+    mail_user = mailinfo["sendaccount"]    #用户名
+    mail_pass = mailinfo["pw"]   #口令 
     sender = mailinfo["sendaccount"]
     receivers = mailinfo["reciveaccount"]  # 接收邮件，可设置为你的QQ邮箱或者其他邮箱
 
     message = MIMEText(msg, 'plain', 'utf-8')
     message['From'] = Header("python脚本", 'utf-8')
-    message['To'] =  Header("qq邮箱", 'utf-8')
+    message['To'] = Header("qq邮箱", 'utf-8')
      
     subject = '电信地址改变了'
     message['Subject'] = Header(subject, 'utf-8')
     try:
         smtpObj = smtplib.SMTP_SSL(mail_host) 
-        smtpObj.login( mail_user,mail_pass)  
+        smtpObj.login(mail_user, mail_pass)  
         smtpObj.sendmail(sender, receivers, message.as_string())
         print "send mail success"
-    except smtplib.SMTPException:
+        return True
+    except Exception,e:
+        return False
         print "Error: cannot send mail"
 
 oldIp = getIp()
 print('My public IP address is: {}'.format(oldIp))
 
 class MyThread(Thread):
+    is_sendsuccess = False
     def __init__(self, event):
         Thread.__init__(self)
         self.stopped = event
@@ -73,11 +84,16 @@ class MyThread(Thread):
             # call a function
     def job(self):
         ip = getIp()
+        print(time.strftime("%Y-%m-%d %H:%M:%S ", time.localtime())+str(ip) )
         # r = requests.get(url, params={'s': thing})
-        if self.oldIp != ip :
-            print ('ipchange',oldIp,ip)
-            sendMailToQQ(ip)
-            self.oldIp = ip
+        writeFile(ip, 'ip.txt')
+        if ip != 'getIpFail':
+            if self.oldIp != ip :
+                self.is_sendsuccess = False
+                print ('ipchange',oldIp,ip)
+                self.oldIp = ip
+        if self.is_sendsuccess != True:
+            self.is_sendsuccess = sendMailToQQ(ip)
 
             
 
